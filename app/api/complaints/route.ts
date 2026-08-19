@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { complaintSchema } from "@/lib/validation";
 import { analyzeComplaint } from "@/lib/ai";
+import { calculatePriority } from "@/lib/priority";
 
 
 // ==========================================
@@ -65,6 +66,10 @@ export async function POST(request: Request) {
     const analysis = await analyzeComplaint(
       result.data.text
     );
+    const priority = calculatePriority(
+  analysis.severity,
+  analysis.sentiment
+);
 
 
     // 4. Save complaint + AI analysis
@@ -83,6 +88,8 @@ export async function POST(request: Request) {
         summary: analysis.summary,
 
         suggestedAction: analysis.suggestedAction,
+        priorityScore: priority.score,
+    priorityReason: priority.reason,
       },
     });
 

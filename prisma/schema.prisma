@@ -15,5 +15,7 @@ model Complaint {
   severity        String?
   summary         String?
   suggestedAction String?
+  priorityScore   Int?
+  priorityReason  String?
   createdAt       DateTime @default(now())
 }
